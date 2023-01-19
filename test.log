@@ -1,0 +1,2 @@
+{"L":"\u001b[31mERROR\u001b[0m","T":"2023-01-19 16:17:47","N":"log1","C":"go-zap-logger/mian.go:11","M":"msg log1"}
+{"L":"ERROR","T":"2023-01-19 16:19:24","N":"log1","C":"go-zap-logger/mian.go:11","M":"msg log1"}
