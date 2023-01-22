@@ -7,6 +7,9 @@ import (
 func main() {
 	log1 := logger.New()
 	log1.Config.SetProjectName("log1")
+	log1.Error("msg log1")
+	log1.Config.SetJSONFormat(false)
+	log1.Error("msg log1")
 	log1.ApplyConfig()
 	log1.Error("msg log1")
 

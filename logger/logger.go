@@ -22,47 +22,47 @@ func New() *Logger {
 	logger := &Logger{
 		Config: newConfig(),
 	}
-	logger.ApplyConfig()
+	logger.SetConfig()
 	return logger
 }
 
-/*ApplyConfig 应用当前Config配置*/
-func (l *Logger) ApplyConfig() {
+//設置Config設定
+func (l *Logger) SetConfig() {
 	conf := l.Config
 	cores := []zapcore.Core{}
 
 	var encoder zapcore.Encoder
 
-	if conf.jsonFormat {
+	if conf.JsonFormat {
 		encoder = zapcore.NewJSONEncoder(getEncoder())
 	} else {
 		encoder = zapcore.NewConsoleEncoder(getEncoder())
 	}
 
-	conf.atomicLevel.SetLevel(getLevel(conf.defaultLogLevel))
+	conf.AtomicLevel.SetLevel(getLevel(conf.DefaultLevel))
 
-	if conf.consoleOut {
+	if conf.ConsoleOut {
 		writer := zapcore.Lock(os.Stdout)
-		core := zapcore.NewCore(encoder, writer, conf.atomicLevel)
+		core := zapcore.NewCore(encoder, writer, conf.AtomicLevel)
 		cores = append(cores, core)
 	}
 
-	if conf.fileOut {
+	if conf.FileOut {
 		writeSyncer := getLogWriter()
-		core := zapcore.NewCore(encoder, writeSyncer, conf.atomicLevel)
+		core := zapcore.NewCore(encoder, writeSyncer, conf.AtomicLevel)
 		cores = append(cores, core)
 	}
 
 	combinedCore := zapcore.NewTee(cores...)
 
 	logger := zap.New(combinedCore,
-		zap.AddCallerSkip(conf.callerSkip),
-		zap.AddStacktrace(getLevel(conf.stacktraceLevel)),
+		zap.AddCallerSkip(conf.CallerSkip),
+		zap.AddStacktrace(getLevel(conf.StacktraceLevel)),
 		zap.AddCaller(),
 	)
 
-	if conf.projectName != "" {
-		logger = logger.Named(conf.projectName)
+	if conf.ProjectName != "" {
+		logger = logger.Named(conf.ProjectName)
 	}
 
 	defer logger.Sync()
@@ -174,12 +174,12 @@ func (l *Logger) Fatalw(msg string, keysAndValues ...interface{}) {
 
 func getEncoder() zapcore.EncoderConfig {
 	return zapcore.EncoderConfig{
-		LevelKey:       "L",
-		TimeKey:        "T",
-		MessageKey:     "M",
-		NameKey:        "N",
-		CallerKey:      "C",
-		StacktraceKey:  "S",
+		LevelKey:       "Level",
+		TimeKey:        "Time",
+		MessageKey:     "Message",
+		NameKey:        "Project",
+		CallerKey:      "Caller",
+		StacktraceKey:  "Trace",
 		LineEnding:     zapcore.DefaultLineEnding,
 		EncodeLevel:    zapcore.CapitalLevelEncoder,
 		EncodeTime:     zapcore.TimeEncoderOfLayout("2006-01-02 15:04:05"),
@@ -209,7 +209,7 @@ func getLevel(level string) zapcore.Level {
 
 func getLogWriter() zapcore.WriteSyncer {
 	lumberJackLogger := &lumberjack.Logger{
-		Filename:   "./test.log",
+		Filename:   "./logs/test.log",
 		MaxSize:    10,
 		MaxBackups: 5,
 		MaxAge:     30,
