@@ -1,0 +1,6 @@
+{"Level":"ERROR","Time":"2023-01-22 13:44:23","Caller":"go-zap-logger/mian.go:10","Message":"msg log1"}
+{"Level":"ERROR","Time":"2023-01-22 13:44:23","Caller":"go-zap-logger/mian.go:12","Message":"msg log1"}
+{"Level":"ERROR","Time":"2023-01-22 13:44:23","Project":"log1","Caller":"go-zap-logger/mian.go:14","Message":"msg log1"}
+{"Level":"ERROR","Time":"2023-01-22 14:46:29","Caller":"go-zap-logger/mian.go:10","Message":"msg log1"}
+{"Level":"ERROR","Time":"2023-01-22 14:46:29","Caller":"go-zap-logger/mian.go:12","Message":"msg log1"}
+{"Level":"ERROR","Time":"2023-01-22 14:46:30","Project":"log1","Caller":"go-zap-logger/mian.go:14","Message":"msg log1"}

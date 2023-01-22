@@ -33,7 +33,7 @@ func newConfig() *Config {
 		AtomicLevel:     zap.NewAtomicLevel(),
 		ProjectName:     "",
 		CallerSkip:      1,
-		JsonFormat:      true,
+		JsonFormat:      false,
 		ConsoleOut:      true,
 		FileOut:         true,
 	}

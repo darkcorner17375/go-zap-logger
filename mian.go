@@ -10,7 +10,7 @@ func main() {
 	log1.Error("msg log1")
 	log1.Config.SetJSONFormat(false)
 	log1.Error("msg log1")
-	log1.ApplyConfig()
+	log1.SubmitConfig()
 	log1.Error("msg log1")
 
 	// log2 := logger.New()
