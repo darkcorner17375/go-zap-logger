@@ -1,4 +1,0 @@
-{"L":"ERROR","T":"2023-01-20 12:45:40","N":"log1","C":"go-zap-logger/mian.go:11","M":"msg log1"}
-{"L":"ERROR","T":"2023-01-21 19:14:59","C":"go-zap-logger/mian.go:10","M":"msg log1"}
-{"L":"ERROR","T":"2023-01-21 19:14:59","C":"go-zap-logger/mian.go:12","M":"msg log1"}
-2023-01-21 19:14:59	ERROR	log1	go-zap-logger/mian.go:14	msg log1
