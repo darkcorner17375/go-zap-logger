@@ -5,7 +5,9 @@ package logger
 
 import (
 	"os"
+	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/natefinch/lumberjack"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -30,6 +32,8 @@ func New() *Logger {
 func (l *Logger) SubmitConfig() {
 	logConf := l.Config
 	cores := []zapcore.Core{}
+	nowTime := time.Now()
+	nowTimeStr := nowTime.Format("2006-01-02")
 
 	var encoder zapcore.Encoder
 
@@ -49,7 +53,7 @@ func (l *Logger) SubmitConfig() {
 
 	if logConf.FileOut {
 		encoder = zapcore.NewJSONEncoder(getFileEncoder())
-		writeSyncer := getLogWriter()
+		writeSyncer := getLogWriter(nowTimeStr)
 		core := zapcore.NewCore(encoder, writeSyncer, logConf.AtomicLevel)
 		cores = append(cores, core)
 	}
@@ -170,7 +174,7 @@ func getConsoleEncoder() zapcore.EncoderConfig {
 		CallerKey:      "Caller",
 		StacktraceKey:  "Trace",
 		LineEnding:     zapcore.DefaultLineEnding,
-		EncodeLevel:    zapcore.CapitalColorLevelEncoder,
+		EncodeLevel:    zapcore.CapitalLevelEncoder,
 		EncodeTime:     zapcore.TimeEncoderOfLayout("2006-01-02 15:04:05"),
 		EncodeDuration: zapcore.SecondsDurationEncoder,
 		EncodeCaller:   zapcore.ShortCallerEncoder,
@@ -212,13 +216,37 @@ func getLevel(level string) zapcore.Level {
 	}
 }
 
-func getLogWriter() zapcore.WriteSyncer {
+func getLogWriter(fileName string) zapcore.WriteSyncer {
 	lumberJackLogger := &lumberjack.Logger{
-		Filename:   "./logs/test.log",
+		Filename:   "./logs/" + fileName + ".log",
 		MaxSize:    10,
 		MaxBackups: 5,
 		MaxAge:     30,
 		Compress:   false,
 	}
 	return zapcore.AddSync(lumberJackLogger)
+}
+
+func (l *Logger) GinLogger() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		start := time.Now()
+		path := c.Request.URL.Path
+		query := c.Request.URL.RawQuery
+		c.Next()
+
+		l.Config.SetProjectName("gin")
+		l.SubmitConfig()
+
+		cost := time.Since(start)
+		l.logger.Info(path,
+			zap.Int("status", c.Writer.Status()),
+			zap.String("method", c.Request.Method),
+			zap.String("path", path),
+			zap.String("query", query),
+			zap.String("ip", c.ClientIP()),
+			zap.String("user-agent", c.Request.UserAgent()),
+			zap.String("errors", c.Errors.ByType(gin.ErrorTypePrivate).String()),
+			zap.Duration("cost", cost),
+		)
+	}
 }
