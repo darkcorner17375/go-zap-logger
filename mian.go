@@ -11,9 +11,12 @@ import (
 func main() {
 	log1 := logger.New()
 	log1.Error("log1:before submit")
+	//新增project name
 	log1.Config.SetProjectName("log2")
+	//送出設定
 	log1.SubmitConfig()
 	log1.Error("log2:set project name")
+	//將text改變json訊息
 	log1.Config.SetJSONFormat(true)
 	log1.SubmitConfig()
 	log1.Error("log3: change to json")
@@ -29,7 +32,7 @@ func main() {
 
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "pong123321",
+			"message": "pong",
 		})
 	})
 
